@@ -1,135 +1,175 @@
 package logger
 
 import (
-    "log"
-    "os"
+	"log"
+	"os"
+	"strconv"
 
-    "github.com/natefinch/lumberjack"
-    "creativecretin.com/forge/1.0/app"
+	"github.com/natefinch/lumberjack"
 )
 
 var (
-    trace_rotate,
-    info_rotate,
-    warn_rotate,
-    err_rotate,
-    trace_std,
-    info_std,
-    warn_std,
-    err_std *log.Logger
+	trace_rotate,
+	info_rotate,
+	warn_rotate,
+	err_rotate,
+	trace_std,
+	info_std,
+	warn_std,
+	err_std *log.Logger
 )
 
 const (
-    logLevelError = uint8(1)
-    logLevelWarn = uint8(2)
-    logLevelInfo = uint8(3)
-    logLevelTrace = uint8(4)
+	logLevelError = uint8(1)
+	logLevelWarn  = uint8(2)
+	logLevelInfo  = uint8(3)
+	logLevelTrace = uint8(4)
 
-    logOutStd = uint8(1)
-    logOutFile = uint8(2)
+	logOutStd  = uint8(1)
+	logOutFile = uint8(2)
 )
 
 var logLevel uint8
 
 func init() {
-    type cfg struct {
-        Filename string `json:"filename"`
-        MaxSize int `json:"maxSize"`
-        MaxBackups int `json:"maxBackups"`
-        MaxAge int `json:"maxAge"`
-        LocalTime bool `json:"localTime"`
-        LogLevel uint8 `json:"logLevel"`
-        LogOutput uint8 `json:"logOutput"`
-    }
+	type cfg struct {
+		Filename   string `json:"filename"`
+		MaxSize    int    `json:"maxSize"`
+		MaxBackups int    `json:"maxBackups"`
+		MaxAge     int    `json:"maxAge"`
+		LocalTime  bool   `json:"localTime"`
+		LogLevel   uint8  `json:"logLevel"`
+		LogOutput  uint8  `json:"logOutput"`
+	}
 
-    c := cfg {
-        LogLevel : logLevelTrace,
-        LogOutput: logOutStd | logOutFile,
-    }
+	c := cfg{
+		LogLevel:  logLevelTrace,
+		LogOutput: logOutStd | logOutFile,
+	}
 
-    if err := app.ReadConfig("config/log.cfg", &c); err != nil {
-        log.Fatalf("%v", err)
-    }
+	if v, ok := os.LookupEnv("APP_LOG_LEVEL"); ok {
+		if i, err := strconv.ParseUint(v, 10, 8); err == nil {
+			c.LogLevel = uint8(i)
+		}
+	}
 
-    Tracef("Log Configuration: %v", c)
+	if v, ok := os.LookupEnv("APP_LOG_OUTPUT"); ok {
+		if i, err := strconv.ParseUint(v, 10, 8); err == nil {
+			c.LogOutput = uint8(i)
+		}
+	}
 
-    if (c.LogOutput & logOutFile) == logOutFile {
-        l := lumberjack.Logger {
-            Filename: c.Filename,
-            MaxSize: c.MaxSize,
-            MaxBackups: c.MaxBackups,
-            MaxAge: c.MaxAge,
-            LocalTime: c.LocalTime,
-        }
+	Tracef("Log Configuration: %v", c)
 
-        trace_rotate = log.New(&l, "TRACE: ", log.LstdFlags)
-        info_rotate = log.New(&l, "INFO: ", log.LstdFlags)
-        warn_rotate = log.New(&l, "WARN: ", log.LstdFlags)
-        err_rotate = log.New(&l, "ERROR: ", log.LstdFlags)
-    }
+	if (c.LogOutput & logOutFile) == logOutFile {
+		l := lumberjack.Logger{
+			Filename:   c.Filename,
+			MaxSize:    c.MaxSize,
+			MaxBackups: c.MaxBackups,
+			MaxAge:     c.MaxAge,
+			LocalTime:  c.LocalTime,
+		}
 
-    if (c.LogOutput & logOutStd) == logOutStd {
-        trace_std = log.New(os.Stdout, "TRACE: ", log.LstdFlags)
-        info_std = log.New(os.Stdout, "INFO: ", log.LstdFlags)
-        warn_std = log.New(os.Stdout, "WARN: ", log.LstdFlags)
-        err_std = log.New(os.Stderr, "ERROR: ", log.LstdFlags)
-    }
+		trace_rotate = log.New(&l, "TRACE: ", log.LstdFlags)
+		info_rotate = log.New(&l, "INFO: ", log.LstdFlags)
+		warn_rotate = log.New(&l, "WARN: ", log.LstdFlags)
+		err_rotate = log.New(&l, "ERROR: ", log.LstdFlags)
+	}
 
-    logLevel = c.LogLevel
+	if (c.LogOutput & logOutStd) == logOutStd {
+		trace_std = log.New(os.Stdout, "TRACE: ", log.LstdFlags)
+		info_std = log.New(os.Stdout, "INFO: ", log.LstdFlags)
+		warn_std = log.New(os.Stdout, "WARN: ", log.LstdFlags)
+		err_std = log.New(os.Stderr, "ERROR: ", log.LstdFlags)
+	}
+
+	logLevel = c.LogLevel
 }
 
-func Error(msg ...interface { }) {
-    if logLevel >= logLevelError {
-        if err_rotate != nil { err_rotate.Println(msg) }
-        if err_std != nil { err_std.Println(msg) }
-    }
+func Error(msg ...interface{}) {
+	if logLevel >= logLevelError {
+		if err_rotate != nil {
+			err_rotate.Println(msg)
+		}
+		if err_std != nil {
+			err_std.Println(msg)
+		}
+	}
 }
 
-func Errorf(msg string, a ...interface { }) {
-    if logLevel >= logLevelError {
-        if err_rotate != nil { err_rotate.Printf(msg, a) }
-        if err_std != nil { err_std.Printf(msg, a) }
-    }
+func Errorf(msg string, a ...interface{}) {
+	if logLevel >= logLevelError {
+		if err_rotate != nil {
+			err_rotate.Printf(msg, a)
+		}
+		if err_std != nil {
+			err_std.Printf(msg, a)
+		}
+	}
 }
 
-func Info(msg ...interface { }) {
-    if logLevel >= logLevelInfo {
-        if info_rotate != nil { info_rotate.Println(msg) }
-        if info_std != nil { info_std.Println(msg) }
-    }
+func Info(msg ...interface{}) {
+	if logLevel >= logLevelInfo {
+		if info_rotate != nil {
+			info_rotate.Println(msg)
+		}
+		if info_std != nil {
+			info_std.Println(msg)
+		}
+	}
 }
 
-func Infof(msg string, a ...interface { }) {
-    if logLevel >= logLevelInfo {
-        if info_rotate != nil { info_rotate.Printf(msg, a) }
-        if info_std != nil { info_std.Printf(msg, a) }
-    }
+func Infof(msg string, a ...interface{}) {
+	if logLevel >= logLevelInfo {
+		if info_rotate != nil {
+			info_rotate.Printf(msg, a)
+		}
+		if info_std != nil {
+			info_std.Printf(msg, a)
+		}
+	}
 }
 
-func Trace(msg ...interface { }) {
-    if logLevel >= logLevelTrace {
-        if trace_rotate != nil { trace_rotate.Println(msg) }
-        if trace_std != nil { trace_std.Println(msg) }
-    }
+func Trace(msg ...interface{}) {
+	if logLevel >= logLevelTrace {
+		if trace_rotate != nil {
+			trace_rotate.Println(msg)
+		}
+		if trace_std != nil {
+			trace_std.Println(msg)
+		}
+	}
 }
 
-func Tracef(msg string, a ...interface { }) {
-    if logLevel >= logLevelTrace {
-        if trace_rotate != nil { trace_rotate.Printf(msg, a) }
-        if trace_std != nil { trace_std.Printf(msg, a) }
-    }
+func Tracef(msg string, a ...interface{}) {
+	if logLevel >= logLevelTrace {
+		if trace_rotate != nil {
+			trace_rotate.Printf(msg, a)
+		}
+		if trace_std != nil {
+			trace_std.Printf(msg, a)
+		}
+	}
 }
 
-func Warn(msg ...interface { }) {
-    if logLevel >= logLevelWarn {
-        if warn_rotate != nil { warn_rotate.Println(msg) }
-        if warn_std != nil { warn_std.Println(msg) }
-    }
+func Warn(msg ...interface{}) {
+	if logLevel >= logLevelWarn {
+		if warn_rotate != nil {
+			warn_rotate.Println(msg)
+		}
+		if warn_std != nil {
+			warn_std.Println(msg)
+		}
+	}
 }
 
-func Warnf(msg string, a ...interface { }) {
-    if logLevel >= logLevelWarn {
-        if warn_rotate != nil { warn_rotate.Printf(msg, a) }
-        if warn_std != nil { warn_std.Printf(msg, a) }
-    }
+func Warnf(msg string, a ...interface{}) {
+	if logLevel >= logLevelWarn {
+		if warn_rotate != nil {
+			warn_rotate.Printf(msg, a)
+		}
+		if warn_std != nil {
+			warn_std.Printf(msg, a)
+		}
+	}
 }
