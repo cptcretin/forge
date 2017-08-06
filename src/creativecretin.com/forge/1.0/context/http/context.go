@@ -23,15 +23,19 @@ type responseStats struct {
 	Rt float64 `json:"responseTime,string"`
 }
 
+var Current *HttpContext
+
 const serverErrorMessage = "An unexpected error occurred"
 
 func Create(t string, w http.ResponseWriter, r *http.Request) *HttpContext {
-	return &HttpContext{
+	Current = &HttpContext{
 		context.Create(t),
 		r,
 		w,
 		http.StatusOK,
 	}
+
+	return Current
 }
 
 func (c *HttpContext) StartTransaction(i string) *context.Transaction {
@@ -56,6 +60,8 @@ func (c *HttpContext) Error(err error, status int) {
 	}
 
 	c.writeJsonResponse(status, msg, nil)
+
+	Current = nil
 }
 
 func (c *HttpContext) End(status int, body interface{}) {
@@ -63,6 +69,8 @@ func (c *HttpContext) End(status int, body interface{}) {
 	c.c.End()
 
 	c.writeJsonResponse(status, httpStatus(status), body)
+
+	Current = nil
 }
 
 func (c *HttpContext) EndFile(status int, r io.Reader, contentType string, size int64) {
@@ -74,6 +82,8 @@ func (c *HttpContext) EndFile(status int, r io.Reader, contentType string, size 
 	c.w.WriteHeader(status)
 
 	io.Copy(c.w, r)
+
+	Current = nil
 }
 
 func (c *HttpContext) Status() string {
