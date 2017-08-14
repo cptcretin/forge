@@ -50,6 +50,10 @@ func (c *HttpContext) GetDuration() time.Duration {
 	return c.c.GetDuration()
 }
 
+func SetHeader(k, v, string) {
+	c.w.Header().Set(k, v)
+}
+
 func (c *HttpContext) Error(err error, status int) {
 	c.c.Error(err)
 	c.s = status
