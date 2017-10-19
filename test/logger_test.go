@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"creativecretin.com/forge/1.0/logger"
+	"forge/1.0/logger"
 )
 
 func TestLogWriter(t *testing.T) {

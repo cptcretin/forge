@@ -4,7 +4,7 @@ import (
     "database/sql"
     "time"
 
-    "creativecretin.com/forge/1.0/logger"
+    "forge/1.0/logger"
 )
 
 type DataContext struct {

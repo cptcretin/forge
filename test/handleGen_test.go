@@ -2,7 +2,7 @@ package test
 
 import (
 	//"fmt"
-	"creativecretin.com/forge/1.0/app"
+	"forge/1.0/app"
 	"testing"
 )
 

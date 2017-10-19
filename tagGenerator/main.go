@@ -7,7 +7,7 @@ import (
     "sync"
 
     _ "github.com/go-sql-driver/mysql"
-    "creativecretin.com/forge/1.0/app"
+    "forge/1.0/app"
 )
 
 const (

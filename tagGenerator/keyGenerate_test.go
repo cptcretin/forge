@@ -4,7 +4,7 @@ import (
     "fmt"
     "testing"
 
-    "creativecretin.com/forge/1.0/app"
+    "forge/1.0/app"
 )
 
 const bytes = 11

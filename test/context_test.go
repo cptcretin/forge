@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"creativecretin.com/forge/1.0/context"
+	"forge/1.0/context"
 )
 
 func contextClosureA(title string, t *testing.T) func() {
