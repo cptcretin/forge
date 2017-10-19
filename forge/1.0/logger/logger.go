@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"creativecretin.com/forge/1.0/app"
 	"github.com/natefinch/lumberjack"
 )
 
@@ -46,6 +47,8 @@ func init() {
 		LogLevel:  logLevelTrace,
 		LogOutput: logOutStd | logOutFile,
 	}
+
+	app.ReadConfig("config/log.cfg", &c)
 
 	if v, ok := os.LookupEnv("APP_LOG_LEVEL"); ok {
 		if i, err := strconv.ParseUint(v, 10, 8); err == nil {
@@ -89,10 +92,10 @@ func init() {
 func Error(msg ...interface{}) {
 	if logLevel >= logLevelError {
 		if err_rotate != nil {
-			err_rotate.Println(msg)
+			err_rotate.Println(msg...)
 		}
 		if err_std != nil {
-			err_std.Println(msg)
+			err_std.Println(msg...)
 		}
 	}
 }
@@ -100,10 +103,10 @@ func Error(msg ...interface{}) {
 func Errorf(msg string, a ...interface{}) {
 	if logLevel >= logLevelError {
 		if err_rotate != nil {
-			err_rotate.Printf(msg, a)
+			err_rotate.Printf(msg, a...)
 		}
 		if err_std != nil {
-			err_std.Printf(msg, a)
+			err_std.Printf(msg, a...)
 		}
 	}
 }
@@ -111,10 +114,10 @@ func Errorf(msg string, a ...interface{}) {
 func Info(msg ...interface{}) {
 	if logLevel >= logLevelInfo {
 		if info_rotate != nil {
-			info_rotate.Println(msg)
+			info_rotate.Println(msg...)
 		}
 		if info_std != nil {
-			info_std.Println(msg)
+			info_std.Println(msg...)
 		}
 	}
 }
@@ -122,10 +125,10 @@ func Info(msg ...interface{}) {
 func Infof(msg string, a ...interface{}) {
 	if logLevel >= logLevelInfo {
 		if info_rotate != nil {
-			info_rotate.Printf(msg, a)
+			info_rotate.Printf(msg, a...)
 		}
 		if info_std != nil {
-			info_std.Printf(msg, a)
+			info_std.Printf(msg, a...)
 		}
 	}
 }
@@ -133,10 +136,10 @@ func Infof(msg string, a ...interface{}) {
 func Trace(msg ...interface{}) {
 	if logLevel >= logLevelTrace {
 		if trace_rotate != nil {
-			trace_rotate.Println(msg)
+			trace_rotate.Println(msg...)
 		}
 		if trace_std != nil {
-			trace_std.Println(msg)
+			trace_std.Println(msg...)
 		}
 	}
 }
@@ -144,10 +147,10 @@ func Trace(msg ...interface{}) {
 func Tracef(msg string, a ...interface{}) {
 	if logLevel >= logLevelTrace {
 		if trace_rotate != nil {
-			trace_rotate.Printf(msg, a)
+			trace_rotate.Printf(msg, a...)
 		}
 		if trace_std != nil {
-			trace_std.Printf(msg, a)
+			trace_std.Printf(msg, a...)
 		}
 	}
 }
@@ -155,10 +158,10 @@ func Tracef(msg string, a ...interface{}) {
 func Warn(msg ...interface{}) {
 	if logLevel >= logLevelWarn {
 		if warn_rotate != nil {
-			warn_rotate.Println(msg)
+			warn_rotate.Println(msg...)
 		}
 		if warn_std != nil {
-			warn_std.Println(msg)
+			warn_std.Println(msg...)
 		}
 	}
 }
@@ -166,10 +169,10 @@ func Warn(msg ...interface{}) {
 func Warnf(msg string, a ...interface{}) {
 	if logLevel >= logLevelWarn {
 		if warn_rotate != nil {
-			warn_rotate.Printf(msg, a)
+			warn_rotate.Printf(msg, a...)
 		}
 		if warn_std != nil {
-			warn_std.Printf(msg, a)
+			warn_std.Printf(msg, a...)
 		}
 	}
 }
