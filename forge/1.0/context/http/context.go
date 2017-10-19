@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"forge/1.0/context"
+	"cretin.co/forge/1.0/context"
 )
 
 type HttpContext struct {
@@ -50,7 +50,7 @@ func (c *HttpContext) GetDuration() time.Duration {
 	return c.c.GetDuration()
 }
 
-func SetHeader(k, v, string) {
+func (c *HttpContext) SetHeader(k, v string) {
 	c.w.Header().Set(k, v)
 }
 
