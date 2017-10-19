@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"cretin.co/forge/1.0/app"
+	"forge/1.0/app"
 	"github.com/natefinch/lumberjack"
 )
 

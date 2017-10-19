@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-    "cretin.co/forge/1.0/logger"
+    "forge/1.0/logger"
 )
 
 type Context struct {
