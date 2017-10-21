@@ -54,3 +54,34 @@ func TestContextError(t *testing.T) {
 
 	c.Error(errors.New("This is a bogus error"))
 }
+
+func TestContextFormat(t *testing.T) {
+	f := struct {
+		I int
+		S string
+	} { 10, "Twenty" }
+
+	c1 := context.Createf("This is a formatted context: (%s)", "my special formatting")
+	c1.StartTransaction("one line")
+	t.Log(c1.String())
+
+	c2 := context.Createf("This is a formatted context: (%v)", f)
+	c2.StartTransaction("two line")
+	t.Log(c2.String())
+
+	c3 := context.Get("Can I Break In?")
+	c3.StartTransaction("three line")
+	t.Log(c3.String())
+}
+
+func TestContextLogging(t *testing.T) {
+	d := struct {
+		I int
+		S string
+	} { 33, "In the morning!" }
+
+	context.Logf(context.Trace, "This is my first message: %s", "Hi!")
+	context.Log(context.Trace, d)
+	context.Logf(context.Trace, "message: %v", d)
+	context.Logf(context.Trace, "Multiple strings: %v, %s, %s, %s", d, "one", "two", "three")
+}

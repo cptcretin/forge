@@ -49,6 +49,26 @@ func Create(t string) *Context {
 	return Current
 }
 
+func Createf(f string, a ...interface{}) *Context {
+	return Create(fmt.Sprintf(f, a))
+}
+
+func Get(t string) *Context {
+	if Current != nil {
+		return Current
+	}
+
+	return Create(t)
+}
+
+func Getf(f string, a ...interface{}) *Context {
+	if Current != nil {
+		return Current
+	}
+
+	return Createf(f, a)
+}
+
 func (c *Context) StartTransaction(i string) *Transaction {
 	if c.status == active {
 		tx := createTransaction(i)
@@ -60,12 +80,32 @@ func (c *Context) StartTransaction(i string) *Transaction {
 	return nil
 }
 
+func (c *Context) StartTransactionf(f string, a ...interface{}) *Transaction {
+	return c.StartTransaction(fmt.Sprintf(f, a))
+}
+
 func (c *Context) CurrentTransaction() *Transaction {
 	if c.status == active && c.s > 0 {
 		return c.h[c.s].CurrentTransaction()
 	}
 
 	return nil
+}
+
+func (c *Context) GetTransaction(i string) *Transaction {
+	if tx := c.CurrentTransaction(); tx == nil {
+		return c.StartTransaction(i)
+	} else {
+		return tx
+	}
+}
+
+func (c *Context) GetTransactionf(f string, a ...interface{}) *Transaction {
+	if tx := c.CurrentTransaction(); tx == nil {
+		return c.StartTransactionf(f, a)
+	} else {
+		return tx
+	}
 }
 
 func (c *Context) GetDuration() time.Duration {
