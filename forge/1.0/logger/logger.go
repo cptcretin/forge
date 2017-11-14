@@ -1,11 +1,11 @@
 package logger
 
 import (
+	"bytes"
+	"encoding/json"
 	"log"
 	"os"
-	"strconv"
 
-	"forge/1.0/app"
 	"github.com/natefinch/lumberjack"
 )
 
@@ -48,18 +48,14 @@ func init() {
 		LogOutput: logOutStd | logOutFile,
 	}
 
-	app.ReadConfig("config/log.cfg", &c)
+	if v, ok := os.LookupEnv("APP_LOGGING"); ok {
+		b := bytes.NewBufferString(v)
 
-	if v, ok := os.LookupEnv("APP_LOG_LEVEL"); ok {
-		if i, err := strconv.ParseUint(v, 10, 8); err == nil {
-			c.LogLevel = uint8(i)
+		if err := json.NewDecoder(b).Decode(&c); err != nil {
+			log.Fatal("Configuration missing for \"APP_LOGGING\"")
 		}
-	}
-
-	if v, ok := os.LookupEnv("APP_LOG_OUTPUT"); ok {
-		if i, err := strconv.ParseUint(v, 10, 8); err == nil {
-			c.LogOutput = uint8(i)
-		}
+	} else {
+		log.Fatal("Configuration missing for \"APP_LOGGING\"")
 	}
 
 	Tracef("Log Configuration: %v", c)
