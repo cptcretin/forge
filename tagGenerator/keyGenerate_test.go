@@ -6,8 +6,13 @@ import (
     "forge/1.0/app"
 )
 
-const bytes = 7
+const (
+    bytes = 7
+    count = 12
+)
 
 func TestKeyGenerate(t *testing.T) {
-    t.Logf("%s\n", app.NewHandle(bytes))
+    for i := 0; i < count; i++ {
+        t.Logf("%s\n", app.NewHandle(bytes))
+    }
 }
