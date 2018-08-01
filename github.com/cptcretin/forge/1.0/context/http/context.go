@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"cretin.co/forge/1.0/context"
+	"github.com/cptcretin/forge/1.0/context"
 )
 
 type HttpContext struct {

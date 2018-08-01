@@ -5,9 +5,9 @@ import (
 )
 
 type Handler interface {
-    StartTransaction(i string) *Transaction
-    CurrentTransaction() *Transaction
-    GetDuration() time.Duration
+    Start(i string) *Tx
+    Current() *Tx
+    Duration() time.Duration
     Error(err error)
     End()
     Status() string

@@ -1,0 +1,10 @@
+INFO: 2018/08/01 23:35:00 20.00111127s - "Test Context" has 4 transactions - Complete
+	5.000349856s - "This is a solo transaction"
+	15.000717509s - "This is a parent transaction"
+		5.000333998s - "This transaction has a parent"
+		5.000192462s - "This transaction happened at 2018-08-01 23:34:55.154470747 +0000 UTC m=+0.002489962"
+			5.000192462s - "Even deeper"
+		5.000191049s - "Transaction has ended"
+	26.376µs - "This transaction happened after a long wait."
+	17.529µs - "Complete 😊"
+

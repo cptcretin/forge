@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"log"
 
-	"cretin.co/forge/1.1/app"
+	"github.com/cptcretin/forge/1.1/app"
     _ "github.com/go-sql-driver/mysql"
 )
 
-type DataContext struct {
-	c          *Context
+type Data struct {
+	c          *C
 	db         *sql.DB
 }
 
@@ -54,36 +54,36 @@ func init() {
 	}
 }
 
-func (c *Context) NewDataContext(conn, tx string) *DataContext {
+func (c *C) NewData(conn, tx string) *Data {
 	c.Get(tx)
 
-	return &DataContext{
+	return &Data{
 		c,
 		connections[conn],
 	}
 }
 
-func (c *Context) NewDataContextf(conn, tx string, a ...interface{}) *DataContext {
+func (c *C) NewDataf(conn, tx string, a ...interface{}) *Data {
 	c.Getf(tx, a...)
 
-	return &DataContext{
+	return &Data{
 		c,
 		connections[conn],
 	}
 }
 
-func (c *DataContext) Connection() *sql.DB {
+func (c *Data) Connection() *sql.DB {
 	return c.db
 }
 
-func (c *DataContext) Start(tx string) *Transaction {
+func (c *Data) Start(tx string) *Tx {
 	return c.c.Start(tx)
 }
 
-func (c *DataContext) Startf(tx string, a ...interface{}) *Transaction {
+func (c *Data) Startf(tx string, a ...interface{}) *Tx {
 	return c.c.Startf(tx, a...)
 }
 
-func (c *DataContext) Error(err error) {
+func (c *Data) Error(err error) {
 	c.c.Error(err)
 }
