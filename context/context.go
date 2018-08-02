@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cptcretin/forge/1.1/logger"
+	"github.com/cptcretin/forge/logger"
 )
 
 type C struct {

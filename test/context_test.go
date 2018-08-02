@@ -4,7 +4,7 @@ import (
     "testing"
     "time"
 
-    "github.com/cptcretin/forge/1.1/context"
+    "github.com/cptcretin/forge/context"
 )
 
 func TestContext(t *testing.T) {
