@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/cptcretin/forge/app"
-    _ "github.com/go-sql-driver/mysql"
 )
 
 type Data struct {
