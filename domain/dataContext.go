@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"log"
 
-	"app"
+	"github.com/cptcretin/forge/app"
     _ "github.com/go-sql-driver/mysql"
 )
 
