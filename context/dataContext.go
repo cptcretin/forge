@@ -54,7 +54,7 @@ func init() {
 	}
 }
 
-func (c *C) NewData(conn, tx string) *Data {
+func (c *C) NewDB(conn, tx string) *Data {
 	c.Get(tx)
 
 	return &Data{
@@ -63,7 +63,7 @@ func (c *C) NewData(conn, tx string) *Data {
 	}
 }
 
-func (c *C) NewDataf(conn, tx string, a ...interface{}) *Data {
+func (c *C) NewDBf(conn, tx string, a ...interface{}) *Data {
 	c.Getf(tx, a...)
 
 	return &Data{
