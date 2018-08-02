@@ -1,11 +1,11 @@
-package context
+package domain
 
 import (
 	"database/sql"
 	"encoding/json"
 	"log"
 
-	"github.com/cptcretin/forge/app"
+	"app"
     _ "github.com/go-sql-driver/mysql"
 )
 

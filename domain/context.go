@@ -1,4 +1,4 @@
-package context
+package domain
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cptcretin/forge/logger"
+	"logger"
 )
 
 type C struct {

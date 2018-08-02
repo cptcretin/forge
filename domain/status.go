@@ -1,4 +1,4 @@
-package context
+package domain
 
 func httpStatus(i int) string {
 	switch i {
