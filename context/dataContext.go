@@ -19,7 +19,7 @@ var (
 	connections map[string]*sql.DB
 )
 
-func init() {
+func prepareConnections() {
 	env := app.Environment("APP_DB_CONN")
 	connections = make(map[string]*sql.DB)
 
@@ -55,6 +55,14 @@ func init() {
 }
 
 func (c *C) NewDB(conn, tx string) *Data {
+	if connections == nil {
+		prepareConnections()
+	}
+
+	if len(conn) == 0 {
+		conn = DefaultDB
+	}
+
 	c.Get(tx)
 
 	return &Data{
@@ -64,6 +72,14 @@ func (c *C) NewDB(conn, tx string) *Data {
 }
 
 func (c *C) NewDBf(conn, tx string, a ...interface{}) *Data {
+	if connections == nil {
+		prepareConnections()
+	}
+
+	if len(conn) == 0 {
+		conn = DefaultDB
+	}
+
 	c.Getf(tx, a...)
 
 	return &Data{

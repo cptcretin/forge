@@ -4,11 +4,11 @@ import (
     "testing"
     "time"
 
-    "domain"
+    "github.com/cptcretin/forge/context"
 )
 
 func TestContext(t *testing.T) {
-    c := domain.Create("Test Context")
+    c := context.Create("Test Context")
     defer c.End()
 
     c.Start("This is a solo transaction")
