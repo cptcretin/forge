@@ -1,18 +1,18 @@
 package tagGenerator
 
 import (
-    "testing"
+	"testing"
 
-    "forge/1.0/app"
+	"app"
 )
 
 const (
-    bytes = 7
-    count = 12
+	bytes = 22
+	count = 12
 )
 
 func TestKeyGenerate(t *testing.T) {
-    for i := 0; i < count; i++ {
-        t.Logf("%s\n", app.NewHandle(bytes))
-    }
+	for i := 0; i < count; i++ {
+		t.Logf("%s\n", app.NewHandle(bytes))
+	}
 }

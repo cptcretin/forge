@@ -37,19 +37,17 @@ const (
 	Error = uint8(40)
 )
 
-func Create(t string) *C {
+func New(t string, a ...interface{}) *C {
+	title := fmt.Sprintf(t, a...)
+
 	return &C{
-		Title:  t,
+		Title:  title,
 		d:      0,
 		s:      0,
 		h:      make(map[int]*Tx),
 		status: active,
 		ex:     nil,
 	}
-}
-
-func Createf(f string, a ...interface{}) *C {
-	return Create(fmt.Sprintf(f, a...))
 }
 
 func (c *C) Start(i string) *Tx {
@@ -78,7 +76,6 @@ func (c *C) Current() *Tx {
 	if c.status == active && c.s > 0 {
 		return c.h[c.s].Current()
 	}
-
 
 	return nil
 }
