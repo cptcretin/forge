@@ -9,8 +9,8 @@ import (
 )
 
 type Data struct {
-	c          *C
-	db         *sql.DB
+	c  *C
+	db *sql.DB
 }
 
 var (
@@ -79,7 +79,7 @@ func (c *C) NewDBf(conn, tx string, a ...interface{}) *Data {
 		conn = DefaultDB
 	}
 
-	c.Getf(tx, a...)
+	c.Get(tx, a...)
 
 	return &Data{
 		c,
@@ -91,12 +91,8 @@ func (c *Data) Connection() *sql.DB {
 	return c.db
 }
 
-func (c *Data) Start(tx string) *Tx {
-	return c.c.Start(tx)
-}
-
-func (c *Data) Startf(tx string, a ...interface{}) *Tx {
-	return c.c.Startf(tx, a...)
+func (c *Data) Start(tx string, a ...interface{}) *Tx {
+	return c.c.Start(tx, a)
 }
 
 func (c *Data) Error(err error) {

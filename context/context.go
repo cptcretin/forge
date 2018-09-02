@@ -17,6 +17,7 @@ type C struct {
 	h      map[int]*Tx
 	status uint8
 	ex     error
+	wg     sync.WaitGroup
 
 	sync.RWMutex
 }
@@ -38,10 +39,8 @@ const (
 )
 
 func New(t string, a ...interface{}) *C {
-	title := fmt.Sprintf(t, a...)
-
 	return &C{
-		Title:  title,
+		Title:  fmt.Sprintf(t, a...),
 		d:      0,
 		s:      0,
 		h:      make(map[int]*Tx),
@@ -50,11 +49,11 @@ func New(t string, a ...interface{}) *C {
 	}
 }
 
-func (c *C) Start(i string) *Tx {
+func (c *C) Start(i string, a ...interface{}) *Tx {
 	if c.status == active {
 		c.Lock()
 
-		tx := createTransaction(i)
+		tx := createTransaction(c, fmt.Sprintf(i, a...))
 		c.h[c.nextStep()] = tx
 
 		c.Unlock()
@@ -63,10 +62,6 @@ func (c *C) Start(i string) *Tx {
 	}
 
 	return nil
-}
-
-func (c *C) Startf(f string, a ...interface{}) *Tx {
-	return c.Start(fmt.Sprintf(f, a...))
 }
 
 func (c *C) Current() *Tx {
@@ -80,17 +75,9 @@ func (c *C) Current() *Tx {
 	return nil
 }
 
-func (c *C) Get(i string) *Tx {
+func (c *C) Get(i string, a ...interface{}) *Tx {
 	if tx := c.Current(); tx == nil {
-		return c.Start(i)
-	} else {
-		return tx
-	}
-}
-
-func (c *C) Getf(f string, a ...interface{}) *Tx {
-	if tx := c.Current(); tx == nil {
-		return c.Startf(f, a)
+		return c.Start(i, a)
 	} else {
 		return tx
 	}
@@ -102,7 +89,11 @@ func (c *C) Duration() time.Duration {
 	c.Lock()
 
 	for _, i := range c.h {
-		runTime += i.Duration()
+		d := i.Duration()
+
+		if i.txType == foreground {
+			runTime += d
+		}
 	}
 
 	c.d = runTime
@@ -117,6 +108,8 @@ func (c *C) Error(err error) {
 		return
 	}
 
+	c.wg.Wait()
+
 	c.Duration()
 
 	c.status = errored
@@ -129,6 +122,8 @@ func (c *C) End() {
 	if c.status != active {
 		return
 	}
+
+	c.wg.Wait()
 
 	c.Duration()
 	c.status = complete
