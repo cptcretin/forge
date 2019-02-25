@@ -49,7 +49,7 @@ func (c *Http) Context() *C {
 }
 
 func (c *Http) Start(tx string, a ...interface{}) *Tx {
-	return c.c.Start(tx, a)
+	return c.c.Start(tx, a...)
 }
 
 func (c *Http) Error(err error, status int) {
