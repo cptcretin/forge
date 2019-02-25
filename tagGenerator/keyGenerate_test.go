@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	bytes = 22
-	count = 12
+	bytes = 9
+	count = 20
 )
 
 func TestKeyGenerate(t *testing.T) {
