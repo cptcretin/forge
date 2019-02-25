@@ -53,7 +53,13 @@ func (c *C) Start(i string, a ...interface{}) *Tx {
 	if c.status == active {
 		c.Lock()
 
-		tx := createTransaction(c, fmt.Sprintf(i, a...))
+		title := i
+
+		if a != nil {
+			title = fmt.Sprintf(i, a...)
+		}
+
+		tx := createTransaction(c, title)
 		c.h[c.nextStep()] = tx
 
 		c.Unlock()

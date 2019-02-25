@@ -28,7 +28,13 @@ const (
 )
 
 func (t *Tx) Start(i string, a ...interface{}) *Tx {
-	tx := createTransaction(t.c, fmt.Sprintf(i, a...))
+	title := i
+
+	if a != nil {
+		title = fmt.Sprintf(i, a...)
+	}
+
+	tx := createTransaction(t.c, title)
 
 	t.Lock()
 	t.h[t.nextStep()] = tx
