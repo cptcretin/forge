@@ -3,6 +3,8 @@ package context
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -22,6 +24,8 @@ type C struct {
 	sync.RWMutex
 }
 
+var appPageSize int
+
 const (
 	active   = uint8(10)
 	complete = uint8(20)
@@ -37,6 +41,16 @@ const (
 	Warn  = uint8(30)
 	Error = uint8(40)
 )
+
+func init() {
+	appPageSize = 20
+
+	if v, ok := os.LookupEnv("APP_PAGING_SIZE"); ok {
+		if size, err := strconv.ParseInt(v, 10, 32); err == nil {
+			appPageSize = int(size)
+		}
+	}
+}
 
 func New(t string, a ...interface{}) *C {
 	return &C{
